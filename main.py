@@ -1,7 +1,7 @@
-import os
 from telebot import types
 
 from configuration import bot
+from data_core.grafs import Wheat_graf, Corn_graf, Rapeseed_graf
 from data_core.requests_data import get_ebm, get_ema, get_eco
 
 
@@ -15,7 +15,7 @@ def start_message(message):
     eco = types.KeyboardButton('Raps')
     ebm_price_chart = types.KeyboardButton('Pšenica graf')
     ema_price_chart = types.KeyboardButton('Kukurica graf')
-    eco_price_chart = types.KeyboardButton('Paps graf')
+    eco_price_chart = types.KeyboardButton('Raps graf')
 
     markup.add(ebm, ema, eco, ebm_price_chart, ema_price_chart, eco_price_chart)
 
@@ -43,11 +43,17 @@ def callback(message):
                                               f'Cas {eco[1]}')
 
         elif message.text == 'Pšenica graf':
-            bot.send_message(message.chat.id, f'graf')
+            Wheat_graf()
+            graf = open('png/wheat_graf.png', 'rb')
+            bot.send_photo(message.chat.id, graf)
         elif message.text == 'Kukurica graf':
-            bot.send_message(message.chat.id, f'graf')
+            Corn_graf()
+            graf = open('png/corn_graf.png', 'rb')
+            bot.send_photo(message.chat.id, graf)
         elif message.text == 'Raps graf':
-            bot.send_message(message.chat.id, f'graf')
+            Rapeseed_graf()
+            graf = open('png/rape_graf.png', 'rb')
+            bot.send_photo(message.chat.id, graf)
 
         else:
             bot.send_message(message.chat.id, 'Nerozumiem. Použite tlačidlá')

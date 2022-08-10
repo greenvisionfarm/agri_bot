@@ -9,6 +9,4 @@ ___
 - [Telebot](https://pypi.org/project/pyTelegramBotAPI)
 - [Requests](https://requests.readthedocs.io/en/latest/)
 - [Sqlalchemy](https://www.sqlalchemy.org/)
-
-[//]: # (https://pythonru.com/biblioteki/shemy-v-sqlalchemy-orm)
-[//]: # (https://pythonru.com/biblioteki/crud-sqlalchemy-orm)
+- [Matplotlib](https://matplotlib.org/)

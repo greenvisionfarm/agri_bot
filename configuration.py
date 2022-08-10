@@ -8,3 +8,4 @@ bot = TeleBot(os.environ.get('TOKEN'))
 KEY = os.environ.get('KEY')
 URL = f'https://flux.agritel.com/agritelwebsite/QuotesAjax.aspx?key={KEY}'
 engine = create_engine('sqlite:///./agri_bot.db')
+
