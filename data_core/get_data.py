@@ -1,12 +1,15 @@
 import requests
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from configuration import URL
 from data_core.models import Wheat, Corn, Rapeseed
 
-from configuration import URL, engine
+engine = create_engine('sqlite:///../agri_bot.db')
 
 
-def change_to_int(x):
-    x = x.split(',')[0]
+def change_to_int(x) -> int:
+    x = int(x.split(',')[0])
     return x
 
 
@@ -22,34 +25,28 @@ def save_to_db(obj):
     s.commit()
 
 
-def get_ebm() -> list:
+def request_ebm():
     """ Wheat """
     all_res = get_json(URL)
     ebm = all_res['data'][0]
     price = change_to_int(ebm['value'])
-    time = ebm['time']
     new_value = Wheat(price=price)
     save_to_db(new_value)
-    return [price, time]
 
 
-def get_ema() -> list:
+def request_ema():
     """ Corn """
     all_res = get_json(URL)
-    ema = all_res['data'][6]
-    price = change_to_int(ema['value'])
-    time = ema['time']
+    ebm = all_res['data'][6]
+    price = change_to_int(ebm['value'])
     new_value = Corn(price=price)
     save_to_db(new_value)
-    return [price, time]
 
 
-def get_eco() -> list:
+def request_eco():
     """ Rapeseed """
     all_res = get_json(URL)
-    eco = all_res['data'][10]
-    price = change_to_int(eco['value'])
-    time = eco['time']
+    ebm = all_res['data'][10]
+    price = change_to_int(ebm['value'])
     new_value = Rapeseed(price=price)
     save_to_db(new_value)
-    return [price, time]

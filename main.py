@@ -2,7 +2,7 @@ from telebot import types
 
 from configuration import bot
 from data_core.grafs import Wheat_graf, Corn_graf, Rapeseed_graf
-from data_core.requests_data import get_ebm, get_ema, get_eco
+from data_core.post_data import post_ebm, post_ema, post_eco
 
 
 @bot.message_handler(commands=['start'])
@@ -30,15 +30,15 @@ def start_message(message):
 def callback(message):
     if message.chat.type == 'private':
         if message.text == 'Pšenica':
-            ebm = get_ebm()
+            ebm = post_ebm()
             bot.send_message(message.chat.id, f'Cena: {ebm[0]} \n\n'
                                               f'Cas: {ebm[1]}')
         elif message.text == 'Kukurica':
-            ema = get_ema()
+            ema = post_ema()
             bot.send_message(message.chat.id, f'Cena: {ema[0]} \n\n'
                                               f'Cas: {ema[1]}')
         elif message.text == 'Raps':
-            eco = get_eco()
+            eco = post_eco()
             bot.send_message(message.chat.id, f'Cena: {eco[0]} \n\n'
                                               f'Cas {eco[1]}')
 

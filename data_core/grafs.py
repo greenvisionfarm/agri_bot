@@ -4,8 +4,12 @@ from sqlalchemy.orm import sessionmaker
 from configuration import engine
 from data_core.models import Wheat, Corn, Rapeseed
 
-session = sessionmaker(bind=engine)
 plt.style.use('seaborn-whitegrid')
+
+
+def db_session():
+    session = sessionmaker(bind=engine)()
+    return session
 
 
 def get_p_t(obj) -> list:
@@ -13,14 +17,14 @@ def get_p_t(obj) -> list:
     price, time = [], []
     for result in obj:
         result_price = int(result.price)
-        result_time = str(result.date.date())
+        result_time = result.date.strftime('%d-%m-%Y')
         price.append(result_price)
         time.append(result_time)
     return [price, time]
 
 
 def Wheat_graf():
-    s = session()
+    s = db_session()
     results = s.query(Wheat).all()
     s.close()
     results = get_p_t(results)
@@ -31,7 +35,7 @@ def Wheat_graf():
 
 
 def Corn_graf():
-    s = session()
+    s = db_session()
     results = s.query(Corn).all()
     s.close()
     results = get_p_t(results)
@@ -42,7 +46,7 @@ def Corn_graf():
 
 
 def Rapeseed_graf():
-    s = session()
+    s = db_session()
     results = s.query(Rapeseed).all()
     s.close()
     results = get_p_t(results)
