@@ -1,56 +1,16 @@
+from datetime import datetime
 import matplotlib.pyplot as plt
-from sqlalchemy.orm import sessionmaker
-
-from configuration import engine
-from data_core.models import Wheat, Corn, Rapeseed
+from data_core.post_data import data_processing
 
 plt.style.use('seaborn-whitegrid')
 
+def create_graf(product_name: str) -> None:
+    """ Creating Data-set """
+    data = data_processing(product_name)
+    prices = [day_price[0] for day_price in data]
+    dates = [datetime.strptime(day_price[1], '%d/%m/%Y') for day_price in data]
 
-def db_session():
-    session = sessionmaker(bind=engine)()
-    return session
-
-
-def get_p_t(obj) -> list:
-    """ Get price and time """
-    price, time = [], []
-    for result in obj:
-        result_price = int(result.price)
-        result_time = result.date.strftime('%d-%m-%Y')
-        price.append(result_price)
-        time.append(result_time)
-    return [price, time]
-
-
-def Wheat_graf():
-    s = db_session()
-    results = s.query(Wheat).all()
-    s.close()
-    results = get_p_t(results)
-    time, price = results[1], results[0]
+    """ Creating Graph """
     fig, ax = plt.subplots()
-    ax.plot(time, price)
-    fig.savefig('png/wheat_graf.png')
-
-
-def Corn_graf():
-    s = db_session()
-    results = s.query(Corn).all()
-    s.close()
-    results = get_p_t(results)
-    time, price = results[1], results[0]
-    fig, ax = plt.subplots()
-    ax.plot(time, price)
-    fig.savefig('png/corn_graf.png')
-
-
-def Rapeseed_graf():
-    s = db_session()
-    results = s.query(Rapeseed).all()
-    s.close()
-    results = get_p_t(results)
-    time, price = results[1], results[0]
-    fig, ax = plt.subplots()
-    ax.plot(time, price)
-    fig.savefig('png/rape_graf.png')
+    ax.plot(dates, prices)
+    fig.savefig(f'./data/{product_name}_graf.png')

@@ -1,39 +1,27 @@
-from sqlalchemy.orm import sessionmaker
-from data_core.models import Wheat, Corn, Rapeseed
+# from datetime import datetime
 
-from configuration import engine
-
-
-def db_session():
-    session = sessionmaker(bind=engine)()
-    return session
+from configuration import main_url, begin_date, end_date
+from data_core.get_data import get_product_prices
 
 
-def post_ebm() -> list:
-    """ Wheat """
-    session = db_session()
-    all_res = session.query(Wheat).all()[-1]
-    session.close()
-    price = all_res.price
-    time = all_res.date.strftime('%d-%m-%Y')
-    return [price, time]
+def data_processing(product_name: str) -> list:
+    """
+        Working with data
+
+        price = float(product['price'][1:].replace(',', '.'))
+        date = product['beginDate']
+        # date = datetime.strptime(product['beginDate'], '%d/%m/%Y')
+    """
+    if product_name == 'Pšenica':
+        product_name = 'BLTPAN'
+    elif product_name == 'Kukurica':
+        product_name = 'MAI'
+    else:
+        product_name = 'Rapeseed'
+
+    product_group = get_product_prices(product_name, main_url, begin_date, end_date)
+    result = [[float(product['price'][1:].replace(',', '.')), product['beginDate']] for product in product_group]
+    return result
 
 
-def post_ema() -> list:
-    """ Corn """
-    session = db_session()
-    all_res = session.query(Corn).all()[-1]
-    session.close()
-    price = all_res.price
-    time = all_res.date.strftime('%d-%m-%Y')
-    return [price, time]
 
-
-def post_eco() -> list:
-    """ Rapeseed """
-    session = db_session()
-    all_res = session.query(Rapeseed).all()[-1]
-    session.close()
-    price = all_res.price
-    time = all_res.date.strftime('%d-%m-%Y')
-    return [price, time]

@@ -1,52 +1,27 @@
 import requests
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
-from configuration import URL
-from data_core.models import Wheat, Corn, Rapeseed
+"""
+Names of products
+Cereal Products     'Milling wheat': "BLTPAN"
+                    'Maize': 'MAI'
+Oilseed Products    'Rapeseed': 'Rapeseed'
+"""
 
-engine = create_engine('sqlite:///../agri_bot.db')
+def get_product_prices(product: str, main_url: str, begin_date: str, end_date: str) -> list:
+    """ Product Type """
+    if product == 'BLTPAN' or product == 'MAI':
+        product_type = 'cereal'
+    else:
+        product_type = 'oilseeds'
 
+    """ Make a Request """
+    url = f'{main_url}/{product_type}/prices?beginDate={begin_date}&endDate={end_date}&'
 
-def change_to_int(x) -> int:
-    x = int(x.split(',')[0])
-    return x
-
-
-def get_json(link: str) -> dict:
-    all_res = requests.get(link).json()
-    return all_res
-
-
-def save_to_db(obj):
-    session = sessionmaker(bind=engine)
-    s = session()
-    s.add(obj)
-    s.commit()
-
-
-def request_ebm():
-    """ Wheat """
-    all_res = get_json(URL)
-    ebm = all_res['data'][0]
-    price = change_to_int(ebm['value'])
-    new_value = Wheat(price=price)
-    save_to_db(new_value)
-
-
-def request_ema():
-    """ Corn """
-    all_res = get_json(URL)
-    ebm = all_res['data'][6]
-    price = change_to_int(ebm['value'])
-    new_value = Corn(price=price)
-    save_to_db(new_value)
-
-
-def request_eco():
-    """ Rapeseed """
-    all_res = get_json(URL)
-    ebm = all_res['data'][10]
-    price = change_to_int(ebm['value'])
-    new_value = Rapeseed(price=price)
-    save_to_db(new_value)
+    if product_type == 'cereal':
+        request_url = f'{url}productCodes={product}&marketCodes=BRAT'
+        response = requests.get(request_url).json()
+        return response
+    if product_type == 'oilseeds':
+        request_url = f'{url}products={product}&memberStateCodes=HU'
+        response = requests.get(request_url).json()
+        return response

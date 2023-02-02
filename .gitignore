@@ -1,11 +1,10 @@
 # Project
 /venv/
 /.idea
-/todo.py
 
 
 # PNG
-/png/corn_graf.png
-/png/rape_graf.png
-/png/wheat_graf.png
+/data/Kukurica_graf.png
+/data/Pšenica_graf.png
+/data/Raps_graf.png
 

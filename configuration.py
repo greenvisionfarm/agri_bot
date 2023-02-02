@@ -1,12 +1,15 @@
 import os
-from sqlalchemy import create_engine
+from datetime import datetime, timedelta
+
 from telebot import TeleBot
 
-# Telegram
+""" Telegram Token """
 bot = TeleBot(os.environ.get('TOKEN'))
-# Requests
-KEY = os.environ.get('KEY')
-URL = f'https://flux.agritel.com/agritelwebsite/QuotesAjax.aspx?key={KEY}'
-# Data
-engine = create_engine('sqlite:///./agri_bot.db')
+
+""" Requests """
+main_url = 'https://ec.europa.eu/agrifood/api'
+end_date = datetime.now().strftime("%d/%m/%Y")
+begin_date = (datetime.now() - timedelta(days=60)).strftime("%d/%m/%Y")
+
+
 
