@@ -14,7 +14,7 @@ ___
 - [Telebot](https://pypi.org/project/pyTelegramBotAPI)
 - [Requests](https://requests.readthedocs.io/en/latest/)
 - [Matplotlib](https://matplotlib.org/)
-- [pytest]()
+- [pytest](https://docs.pytest.org/)
 
 
 # Version 0.2
@@ -26,4 +26,12 @@ To run the application, use the command
 
 ```commandline
     python main.py
+```
+
+# Start Tests
+
+To run tests use the command 
+
+```commandline
+    python -m pytest
 ```
