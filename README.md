@@ -1,5 +1,4 @@
 # AGRI-bot | [Telegram link](https://t.me/Lagro_bot)
-___
 
 Telegram bot providing data on prices for wheat, corn and rapeseed from
 [Central European Commission](https://agridata.ec.europa.eu/extensions/DataPortal/home.html).
@@ -10,15 +9,10 @@ Markets:
 ___
 
 ## Tech
-___
 - [Telebot](https://pypi.org/project/pyTelegramBotAPI)
 - [Requests](https://requests.readthedocs.io/en/latest/)
 - [Matplotlib](https://matplotlib.org/)
 - [pytest](https://docs.pytest.org/)
-
-
-# Version 0.2
-- Database abandonment
 
 # Start App
 
