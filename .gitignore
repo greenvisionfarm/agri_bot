@@ -1,3 +1,4 @@
 # Project
-/venv/
+/venv
 /.idea
+/.pytest_cache
