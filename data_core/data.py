@@ -1,3 +1,5 @@
+from statistics import mean
+
 import requests
 from datetime import datetime, timedelta
 
@@ -25,13 +27,7 @@ class ApiData:
             return response
 
     def data_processing(self, product_name: str) -> str:
-        """
-            Working with data
-
-            price = float(product['price'][1:].replace(',', '.'))
-            date = product['beginDate']
-            # date = datetime.strptime(product['beginDate'], '%d/%m/%Y')
-        """
+        """ Working with data """
         if product_name == 'Pšenica':
             product_name = 'BLTPAN'
         elif product_name == 'Kukurica':
@@ -40,9 +36,8 @@ class ApiData:
             product_name = 'Rapeseed'
 
         product_group = self.get_product_prices(product_name)
-        price = sum([float(i['price'][1:].replace(',', '.')) for i in product_group])
-        price = format(price /  len(product_group), ".2f")
-        # <--- Change to mean
+        price = mean([float(i['price'][1:].replace(',', '.')) for i in product_group])
+        price = format(price, ".2f")
 
         return price
 
