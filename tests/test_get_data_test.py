@@ -24,7 +24,6 @@ class TestGetData:
             assert response == 200
 
 
-
     @pytest.mark.parametrize('product_name' , ['BLTPAN', 'MAI', 'Rapeseed'])
     def test_get_product_prices(self, product_name):
         response = get_product_prices(product_name, main_url, begin_date, end_date)
