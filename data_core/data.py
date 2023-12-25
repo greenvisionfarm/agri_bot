@@ -1,23 +1,16 @@
-from statistics import mean
-
 import requests
 from datetime import datetime, timedelta
 from constants import main_constants
 
 
 class ApiData:
-    begin_date = (datetime.now() - timedelta(days=60)).strftime("%d/%m/%Y")
+    def __init__(self):
+        self.begin_date = (datetime.now() - timedelta(days=60)).strftime("%d/%m/%Y")
 
     def get_product_prices(self, product: str) -> list:
         """ Product Type """
-        if product == 'BLTPAN' or product == 'MAI':
-            product_type = main_constants.cereal
-        else:
-            product_type = main_constants.oilseeds
-
-        """ Make a Request """
-        url = f'{main_constants.main_url}/{product_type}/prices?beginDate={self.begin_date}&'
-
+        product_type = main_constants.products_groups[product]
+        url = f'{main_constants.main_url}/{product_type}/prices?beginDate={self.begin_date}&memberStateCodes=SK&'
         if product_type == main_constants.cereal:
             request_url = f'{url}productCodes={product}'
         else:
@@ -26,14 +19,15 @@ class ApiData:
         response = requests.get(request_url).json()
         return response
 
-    def data_processing(self, product_name: str) -> str:
+    def data_processing(self, product_name: str) -> list:
         """ Working with data """
         product_name = main_constants.products_dict[product_name]
-        product_group = self.get_product_prices(product_name)
-        price = mean([float(i['price'][1:].replace(',', '.')) for i in product_group])
-        price = format(price, ".2f")
+        product_group = self.get_product_prices(product_name)[0]
 
-        return price
+        product_group = [product_group['price'], product_group['beginDate']]
+        product_group[0] = product_group[0].replace(',', '.')
+
+        return product_group
 
     @staticmethod
     def validation_of_incoming_data(data: str):

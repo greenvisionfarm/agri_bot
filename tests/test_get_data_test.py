@@ -1,7 +1,7 @@
 import requests
 import pytest
 
-from configuration import main_url, begin_date, end_date
+from constants.main_constants import main_url, begin_date, end_date
 from data_core.get_data import get_product_prices
 
 class TestGetData:
