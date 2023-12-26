@@ -1,5 +1,5 @@
 from data_core.data import ApiData
-from constants.main_constants import products
+from data_core.main_constants import products
 import pytest
 
 class TestValidationData:

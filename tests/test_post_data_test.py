@@ -1,7 +1,8 @@
 import pytest
 
 from data_core.data import ApiData
-from constants import main_constants
+from data_core import main_constants
+
 
 class TestDataProcessing:
     api_data = ApiData()

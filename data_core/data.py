@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime, timedelta
-from constants import main_constants
+from data_core import main_constants
 
 
 class ApiData:

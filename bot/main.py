@@ -1,27 +1,18 @@
 from telebot import types
 
+from bot import buttons
 from bot.configuration import bot
 
 from data_core.data import ApiData
-from constants import main_constants
+from bot import constants
 # from data_core.grafs import create_graf
 
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    # Creating keyboard buttons
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    wheat = types.KeyboardButton(main_constants.psenica)
-    maize = types.KeyboardButton(main_constants.kukurica)
-    rapeseed = types.KeyboardButton(main_constants.raps)
-    # wheat_price_chart = types.KeyboardButton('Pšenica graf')
-    # maize_price_chart = types.KeyboardButton('Kukurica graf')
-    # rapeseed_price_chart = types.KeyboardButton('Raps graf')
-
-    markup.add(wheat, maize, rapeseed)
-
-    # Start message
-    bot.send_message(message.chat.id, main_constants.start_message_text, reply_markup=markup)
+    markup.add(buttons.wheat, buttons.maize, buttons.rapeseed)
+    bot.send_message(message.chat.id, constants.start_message_text, reply_markup=markup)
 
 
 @bot.message_handler(content_types=['text'])
@@ -35,11 +26,11 @@ def callback(message):
             request_processing = len(input_message_validation)
             if request_processing == 1:
                 result, data = api_data.data_processing(input_message_validation[0])
-                bot.send_message(message.chat.id, main_constants.answer_message.format(result, data))
+                bot.send_message(message.chat.id, constants.answer_message.format(result, data))
             # if request_processing == 2:
             #     product = input_message_validation[0]
             #     graf = create_graf(product)
             #
             #     bot.send_photo(message.chat.id, graf)
         else:
-            bot.send_message(message.chat.id, main_constants.error_message)
+            bot.send_message(message.chat.id, constants.error_message)

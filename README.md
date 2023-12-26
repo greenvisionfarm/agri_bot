@@ -4,10 +4,6 @@ ___
 Telegram bot providing data on prices for wheat, corn and rapeseed from
 [Central European Commission](https://agridata.ec.europa.eu/extensions/DataPortal/home.html).
 [Central European Commission API](https://agridata.ec.europa.eu/extensions/DataPortal/API_Documentation.html)
-
-## Markets:
-- Wheat and Corn - Slovakia
-- Rape - Hungary
 ___
 
 ## Tech
