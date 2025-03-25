@@ -6,6 +6,13 @@ from data_core import main_constants
 wheat = types.KeyboardButton(main_constants.psenica)
 maize = types.KeyboardButton(main_constants.kukurica)
 rapeseed = types.KeyboardButton(main_constants.raps)
-# wheat_price_chart = types.KeyboardButton('Pšenica graf')
-# maize_price_chart = types.KeyboardButton('Kukurica graf')
-# rapeseed_price_chart = types.KeyboardButton('Raps graf')
+
+wheat_price_chart = types.KeyboardButton('Pšenica graf')
+maize_price_chart = types.KeyboardButton('Kukurica graf')
+rapeseed_price_chart = types.KeyboardButton('Raps graf')
+
+
+bot_buttons = [
+    wheat, maize, rapeseed,
+    wheat_price_chart, maize_price_chart, rapeseed_price_chart
+]
