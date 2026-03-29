@@ -36,6 +36,8 @@ def callback(message):
 
     if request_processing == 1:
         result, data = api_data.data_processing(input_message_validation[0])
+        if result is False:
+            return bot.send_message(message.chat.id, "Не удалось получить данные")
         bot_message = create_message(result, data)
         return bot.send_message(message.chat.id, bot_message)
 
@@ -44,6 +46,7 @@ def callback(message):
         graf = api_data.create_graf(product)
         if graf:
             bot.send_photo(message.chat.id, graf)
-
         else:
             bot.send_message(message.chat.id, 'Na vykreslenie grafu nie je dostatok hodnôt')
+    else:
+        return bot.send_message(message.chat.id, constants.error_message)

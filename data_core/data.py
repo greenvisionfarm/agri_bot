@@ -30,7 +30,7 @@ class ApiData:
             if errors:
                 return [False, False]
 
-        return requests.get(request_url).json()
+        return response
 
     def create_requests_url(self, product_type, product, date):
         url = f'{self.url}/{product_type}/prices?beginDate={date}&memberStateCodes={self.country}&'
@@ -68,22 +68,9 @@ class ApiData:
         return product_group
 
     @staticmethod
-    def validation_of_incoming_data(data: str):
-        data = data.split(' ')
-        first_letter = data[0]
-
-        if first_letter not in main_constants.products:
-            return False
-
-        elif len(data) == 1 or (len(data) == 2 and data[1] == 'graf'):
-            return data
-
-        return False
-
-    @staticmethod
     def change_date_format(date):
-        date = date.split("/")
-        return "/".join(date[:-1])
+        day, month, year = date.split("/")
+        return f"{day}/{month}/{year}"
 
     @staticmethod
     def change_price(price):
@@ -114,5 +101,6 @@ class ApiData:
 
         canvas = FigureCanvas(fig)
         canvas.print_png(png_output)
+        plt.close(fig)
 
         return png_output.getvalue()

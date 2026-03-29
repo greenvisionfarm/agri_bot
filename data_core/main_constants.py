@@ -2,6 +2,10 @@
 # Api url
 main_url = 'https://ec.europa.eu/agrifood/api'
 
+# Date range for API requests
+begin_date = '01/01/2020'
+end_date = '31/12/2030'
+
 # Products groups
 cereal = 'cereal'
 oilseeds = 'oilseeds'

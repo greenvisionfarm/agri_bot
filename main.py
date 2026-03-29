@@ -1,4 +1,4 @@
-from bot.main import *
+from bot.configuration import bot
 
 if __name__ == '__main__':
     try:
