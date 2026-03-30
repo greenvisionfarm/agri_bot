@@ -1,13 +1,13 @@
 """
-Тести для перевірки основної функціональності бота
+Тесты для проверки основной функциональности бота
 
-Перевіряють роботу обробників повідомлень, валідацію та інтеграцію компонентів.
+Проверяют работу обработчиков сообщений, валидацию и интеграцию компонентов.
 """
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 from telebot import types
 
-# TOKEN встановлено в conftest.py до запуску тестів
+# TOKEN установлен в conftest.py до запуска тестов
 
 from bot.functions import validation_of_incoming_data, create_message
 from bot import constants
@@ -16,40 +16,40 @@ from data_core import main_constants
 
 
 class TestBotHandlers:
-    """Тести обробників повідомлень бота"""
-    
+    """Тесты обработчиков сообщений бота"""
+
     def test_start_command_handler(self):
-        """Перевірка обробки команди /start"""
+        """Проверка обработки команды /start"""
         from bot.configuration import bot
         from bot import buttons
-        
+
         mock_message = Mock()
         mock_message.from_user.id = 12345
         mock_message.from_user.username = 'test_user'
         mock_message.chat.id = 12345
         mock_message.bot = bot
-        
-        # Імпортуємо функцію після встановлення TOKEN
+
+        # Импортируем функцию после установки TOKEN
         from bot.main import add_buttons
         markup = add_buttons()
-        
+
         assert isinstance(markup, types.ReplyKeyboardMarkup)
-        assert len(buttons.bot_buttons) == 6  # 3 продукти + 3 графіки
-    
+        assert len(buttons.bot_buttons) == 6  # 3 продукта + 3 графика
+
     def test_add_buttons(self):
-        """Перевірка створення кнопок"""
+        """Проверка создания кнопок"""
         from bot import buttons
-        
+
         from bot.main import add_buttons
         markup = add_buttons()
-        
+
         assert isinstance(markup, types.ReplyKeyboardMarkup)
-        assert len(buttons.bot_buttons) == 6  # 3 продукти + 3 графіки
+        assert len(buttons.bot_buttons) == 6  # 3 продукта + 3 графика
 
 
 class TestValidation:
-    """Тести валідації вхідних даних"""
-    
+    """Тесты валидации входных данных"""
+
     @pytest.mark.parametrize('input_text,expected', [
         ('Pšenica', ['Pšenica']),
         ('Kukurica', ['Kukurica']),
@@ -59,10 +59,10 @@ class TestValidation:
         ('Raps graf', ['Raps', 'graf']),
     ])
     def test_validation_positive(self, input_text, expected):
-        """Позитивні тести валідації"""
+        """Позитивные тесты валидации"""
         result = validation_of_incoming_data(input_text)
-        assert result == expected, f"Expected {expected}, got {result}"
-    
+        assert result == expected, f"Ожидалось {expected}, получено {result}"
+
     @pytest.mark.parametrize('input_text', [
         ' ',
         '',
@@ -70,221 +70,221 @@ class TestValidation:
         'qwerty qwerty',
         'Pšenica extra',
         '123',
-        'Pšenica Graf',  # Велика літера
+        'Pšenica Graf',  # Большая буква
     ])
     def test_validation_negative(self, input_text):
-        """Негативні тести валідації"""
+        """Негативные тесты валидации"""
         result = validation_of_incoming_data(input_text)
-        assert result is False, f"Expected False for '{input_text}', got {result}"
+        assert result is False, f"Ожидалось False для '{input_text}', получено {result}"
 
 
 class TestCreateMessage:
-    """Тести форматування повідомлень"""
-    
+    """Тесты форматирования сообщений"""
+
     def test_create_message_format(self):
-        """Перевірка формату повідомлення"""
+        """Проверка формата сообщения"""
         result = create_message('250.5', '01/03/2024')
         expected = constants.answer_message.format('250.5', '01/03/2024')
         assert result == expected
-    
+
     def test_create_message_with_special_chars(self):
-        """Перевірка з спеціальними символами"""
+        """Проверка со специальными символами"""
         result = create_message('100,5', '15/12/2023')
         assert '100,5' in result
         assert '15/12/2023' in result
 
 
 class TestApiDataClass:
-    """Тести класу ApiData"""
-    
+    """Тесты класса ApiData"""
+
     @pytest.fixture
     def api_data(self):
         return ApiData()
-    
+
     def test_api_data_initialization(self, api_data):
-        """Перевірка ініціалізації ApiData"""
+        """Проверка инициализации ApiData"""
         assert api_data.url == main_constants.main_url
         assert api_data.country == 'SK'
         assert api_data.begin_date is not None
-    
+
     def test_get_begin_date(self, api_data):
-        """Перевірка розрахунку початкової дати"""
+        """Проверка расчёта начальной даты"""
         date_30 = api_data.get_begin_date(days=30)
         date_120 = api_data.get_begin_date(days=120)
-        
-        # Перевірка формату дати
+
+        # Проверка формата даты
         assert len(date_30.split('/')) == 3
         assert len(date_120.split('/')) == 3
-        
-        # 120 днів має бути раніше ніж 30 днів
+
+        # 120 дней должно быть раньше чем 30 дней
         from datetime import datetime
         d30 = datetime.strptime(date_30, '%d/%m/%Y')
         d120 = datetime.strptime(date_120, '%d/%m/%Y')
         assert d120 < d30
-    
+
     def test_change_date_format(self, api_data):
-        """Перевірка зміни формату дати"""
+        """Проверка изменения формата даты"""
         result = api_data.change_date_format('01/02/2024')
         assert result == '01/02/2024'
-    
+
     def test_change_price(self, api_data):
-        """Перевірка конвертації ціни"""
-        # Тест з комою (європейський формат)
+        """Проверка конвертации цены"""
+        # Тест с запятой (европейский формат)
         result = api_data.change_price('123,45€')
         assert result == 123.45
-        
-        # Тест з крапкою
+
+        # Тест с точкой
         result = api_data.change_price('100.50€')
         assert result == 100.50
-    
+
     def test_change_price_invalid(self, api_data):
-        """Перевірка з невірною ціною"""
+        """Проверка с неверной ценой"""
         result = api_data.change_price('invalid')
         assert result == 0.0
 
 
 class TestCallbackHandler:
-    """Тести обробки повідомлень callback"""
-    
+    """Тесты обработки сообщений callback"""
+
     def test_callback_private_chat_only(self):
-        """Перевірка що бот відповідає тільки в приватних чатах"""
+        """Проверка что бот отвечает только в приватных чатах"""
         from bot.main import callback
         from bot.configuration import bot
-        
+
         mock_message = Mock()
         mock_message.chat.type = 'group'
         mock_message.from_user.id = 12345
         mock_message.from_user.username = 'test'
         mock_message.text = 'Pšenica'
         mock_message.bot = bot
-        
+
         with patch.object(bot, 'send_message') as mock_send:
             callback(mock_message)
-            # Бот не має надсилати повідомлення в груповому чаті
+            # Бот не должен отправлять сообщение в групповом чате
             assert not mock_send.called
-    
+
     def test_callback_invalid_input(self):
-        """Перевірка обробки невірних даних"""
+        """Проверка обработки неверных данных"""
         from bot.main import callback
         from bot.configuration import bot
-        
+
         mock_message = Mock()
         mock_message.chat.type = 'private'
         mock_message.from_user.id = 12345
         mock_message.from_user.username = 'test'
         mock_message.text = 'invalid_input'
         mock_message.bot = bot
-        
+
         with patch.object(bot, 'send_message') as mock_send:
             callback(mock_message)
-            # Бот має надіслати повідомлення про помилку
+            # Бот должен отправить сообщение об ошибке
             assert mock_send.called
             call_args = mock_send.call_args
             assert constants.error_message in call_args[0][1]
-    
+
     @patch('bot.main.ApiData')
     def test_callback_price_request(self, mock_api_class):
-        """Перевірка запиту ціни"""
+        """Проверка запроса цены"""
         from bot.main import callback
         from bot.configuration import bot
-        
-        # Налаштовуємо мок для ApiData
+
+        # Настраиваем мок для ApiData
         mock_api_instance = Mock()
         mock_api_instance.data_processing.return_value = ['250.5', '01/03/2024']
         mock_api_class.return_value = mock_api_instance
-        
+
         mock_message = Mock()
         mock_message.chat.type = 'private'
         mock_message.from_user.id = 12345
         mock_message.from_user.username = 'test'
         mock_message.text = 'Pšenica'
         mock_message.bot = bot
-        
+
         with patch.object(bot, 'send_message') as mock_send:
             callback(mock_message)
-            
-            # Перевіряємо що data_processing був викликаний
+
+            # Проверяем что data_processing был вызван
             assert mock_api_instance.data_processing.called
-            # Бот має надіслати відповідь
+            # Бот должен отправить ответ
             assert mock_send.called
-    
+
     @patch('bot.main.ApiData')
     def test_callback_graph_request(self, mock_api_class):
-        """Перевірка запиту графіку"""
+        """Проверка запроса графика"""
         from bot.main import callback
         from bot.configuration import bot
-        
-        # Налаштовуємо мок для ApiData
+
+        # Настраиваем мок для ApiData
         mock_api_instance = Mock()
         mock_api_instance.create_graf.return_value = b'fake_png_data'
         mock_api_class.return_value = mock_api_instance
-        
+
         mock_message = Mock()
         mock_message.chat.type = 'private'
         mock_message.from_user.id = 12345
         mock_message.from_user.username = 'test'
         mock_message.text = 'Pšenica graf'
         mock_message.bot = bot
-        
+
         with patch.object(bot, 'send_photo') as mock_send:
             callback(mock_message)
-            
-            # Перевіряємо що create_graf був викликаний
+
+            # Проверяем что create_graf был вызван
             assert mock_api_instance.create_graf.called
-            # Бот має надіслати фото
+            # Бот должен отправить фото
             assert mock_send.called
 
 
 class TestErrorHandling:
-    """Тести обробки помилок"""
-    
+    """Тесты обработки ошибок"""
+
     @patch('bot.main.ApiData')
     def test_callback_api_error(self, mock_api_class):
-        """Перевірка обробки помилки API"""
+        """Проверка обработки ошибки API"""
         from bot.main import callback
         from bot.configuration import bot
-        
-        # Налаштовуємо мок для повернення помилки
+
+        # Настраиваем мок для возврата ошибки
         mock_api_instance = Mock()
         mock_api_instance.data_processing.return_value = [False, False]
         mock_api_class.return_value = mock_api_instance
-        
+
         mock_message = Mock()
         mock_message.chat.type = 'private'
         mock_message.from_user.id = 12345
         mock_message.from_user.username = 'test'
         mock_message.text = 'Pšenica'
         mock_message.bot = bot
-        
+
         with patch.object(bot, 'send_message') as mock_send:
             callback(mock_message)
-            
-            # Бот має надіслати повідомлення про помилку
+
+            # Бот должен отправить сообщение об ошибке
             assert mock_send.called
             call_args = mock_send.call_args
             assert 'Не удалось получить данные' in call_args[0][1]
-    
+
     @patch('bot.main.ApiData')
     def test_callback_graph_no_data(self, mock_api_class):
-        """Перевірка коли немає даних для графіку"""
+        """Проверка когда нет данных для графика"""
         from bot.main import callback
         from bot.configuration import bot
-        
+
         mock_api_instance = Mock()
         mock_api_instance.create_graf.return_value = False
         mock_api_class.return_value = mock_api_instance
-        
+
         mock_message = Mock()
         mock_message.chat.type = 'private'
         mock_message.from_user.id = 12345
         mock_message.from_user.username = 'test'
         mock_message.text = 'Pšenica graf'
         mock_message.bot = bot
-        
+
         with patch.object(bot, 'send_message') as mock_send:
             callback(mock_message)
-            
-            # Бот має надіслати повідомлення про недостатньо даних
+
+            # Бот должен отправить сообщение о недостатке данных
             assert mock_send.called
             call_args = mock_send.call_args
             assert 'Na vykreslenie grafu nie je dostatok hodnôt' in call_args[0][1]

@@ -1,30 +1,30 @@
 """
-Конфігурація pytest для всього проекту.
-Встановлює змінні оточення перед запуском тестів.
+Конфигурация pytest для всего проекта.
+Устанавливает переменные окружения перед запуском тестов.
 """
 import os
 import pytest
 
-# Встановлюємо тестовий TOKEN до завантаження будь-яких модулів
-# Це має бути зроблено до імпорту bot.configuration
+# Устанавливаем тестовый TOKEN до загрузки любых модулей
+# Это должно быть сделано до импорта bot.configuration
 os.environ.setdefault('TOKEN', '1234567890:ABCdefGHIjklMNOpqrsTUVwxyz')
 
 
 @pytest.fixture(scope='session')
 def test_token():
-    """Фікстура з тестовим токеном"""
+    """Фикстура с тестовым токеном"""
     return os.environ.get('TOKEN')
 
 
 @pytest.fixture
 def sample_products():
-    """Фікстура зі списком продуктів"""
+    """Фикстура со списком продуктов"""
     from data_core import main_constants
     return main_constants.products
 
 
 @pytest.fixture
 def api_data():
-    """Фікстура з екземпляром ApiData"""
+    """Фикстура с экземпляром ApiData"""
     from data_core.data import ApiData
     return ApiData()

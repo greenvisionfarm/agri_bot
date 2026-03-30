@@ -4,7 +4,7 @@ from logging.handlers import RotatingFileHandler
 
 from telebot import TeleBot
 
-# Налаштування логування
+# Настройка логирования
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -16,12 +16,12 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-""" Telegram Token """
+""" Токен Telegram бота """
 TOKEN = os.environ.get('TOKEN')
 if not TOKEN:
     logger.critical("TOKEN environment variable is not set")
     raise ValueError("TOKEN environment variable is not set")
 
-logger.info("Bot token loaded successfully")
+logger.info("Токен бота успешно загружен")
 bot = TeleBot(TOKEN)
-logger.info("TeleBot instance created")
+logger.info("Экземпляр TeleBot создан")

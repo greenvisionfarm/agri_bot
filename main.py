@@ -3,16 +3,16 @@ from bot.configuration import bot, logger
 
 if __name__ == '__main__':
     logger.info("=" * 50)
-    logger.info("Bot starting...")
+    logger.info("Запуск бота...")
     logger.info("=" * 50)
-    
+
     try:
-        logger.info("Starting bot polling (non-stop mode)")
+        logger.info("Запуск polling бота (режим non-stop)")
         bot.polling(non_stop=True, timeout=60)
     except KeyboardInterrupt:
-        logger.info("Bot stopped by user (KeyboardInterrupt)")
+        logger.info("Бот остановлен пользователем (KeyboardInterrupt)")
     except Exception as e:
-        logger.critical(f"Bot crashed with error: {e}", exc_info=True)
+        logger.critical(f"Бот упал с ошибкой: {e}", exc_info=True)
         raise
     finally:
-        logger.info("Bot shutdown complete")
+        logger.info("Завершение работы бота")
