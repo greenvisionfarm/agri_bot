@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  agri-bot:
+    build: .
+    container_name: agri-bot
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: python main.py
+
+  agri-updater:
+    build: .
+    container_name: agri-updater
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    # Простая петля: запуск планировщика, ожидание 6 часов, повтор
+    # Если scheduler.py сам проверит, что прошло <24 часов, он просто выйдет
+    # Мы перезапускаем его, чтобы он снова уснул.
+    command: >
+      bash -c "while true; do 
+        echo \"Starting scheduler... \"; 
+        python scheduler.py; 
+        echo \"Scheduler finished. Sleeping 6 hours...\"; 
+        sleep 21600; 
+      done"
+
+networks:
+  default:
+    name: agri-net
